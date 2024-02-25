@@ -3,22 +3,14 @@ const axios = require('axios');
 
 writeCat = (input, output, data) => {
     fs.writeFile(output, data, (err) => {
-        if(err){
-            console.log(`${err}`);
-            process.exit(1);
-        }
-        else {
-          console.log(`no output, but ${output} contains contents of ${input}`);
-        }
+        if(err){ console.log(`${err}`); process.exit(1); }
+        else console.log(`no output, but ${output} contains contents of ${input}`);
     });
 }
 
 cat = (path, output=null) => {
     fs.readFile(path, 'utf-8', (err, data) => {
-        if(err){
-            console.log(`${err}`);
-            process.exit(1);
-        }
+        if(err){ console.log(`${err}`); process.exit(1); }
         if(output) writeCat(path, output, data);
         else console.log(data);
     });
@@ -31,7 +23,7 @@ async function webCat(url, output=null) {
             if(output) writeCat(url, output, res.data);
             else console.log(res.data);
         }
-      } catch(err) { console.log(`${err}`) }
+      } catch(err) { console.log(`${err}`); process.exit(1); }
 }
 
 // check if string is valid url
