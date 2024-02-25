@@ -47,6 +47,7 @@ isUrl = (str) => {
 }
 
 const main = () => {
+    let output;
     for(let arg of process.argv)
         if(arg === '--out'){ 
             output = process.argv[process.argv.length - 2]
