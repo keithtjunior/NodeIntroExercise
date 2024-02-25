@@ -1,9 +1,6 @@
 const fs = require('fs');
 const axios = require('axios');
 
-let shouldWriteCat = false;
-let outputArg;
-
 writeCat = (input, output, data) => {
     fs.writeFile(output, data, (err) => {
         if(err){
@@ -16,22 +13,22 @@ writeCat = (input, output, data) => {
     });
 }
 
-cat = (path) => {
+cat = (path, output=null) => {
     fs.readFile(path, 'utf-8', (err, data) => {
         if(err){
             console.log(`${err}`);
             process.exit(1);
         }
-        if(shouldWriteCat) writeCat(path, outputArg, data);
+        if(output) writeCat(path, output, data);
         else console.log(data);
     });
 }
 
-async function webCat(url) {
+async function webCat(url, output=null) {
     try {
         let res = await axios.get(`${url}`);
         if(res) {
-            if(shouldWriteCat) writeCat(url, outputArg, res.data);
+            if(output) writeCat(url, output, res.data);
             else console.log(res.data);
         }
       } catch(err) { console.log(`${err}`) }
@@ -52,13 +49,12 @@ isUrl = (str) => {
 const main = () => {
     for(let arg of process.argv)
         if(arg === '--out'){ 
-            shouldWriteCat = true;
-            outputArg = process.argv[process.argv.length - 2]
+            output = process.argv[process.argv.length - 2]
             break; 
         }
-    let inputArg = process.argv.slice(-1)[0];
-    if(isUrl(inputArg)) webCat(inputArg);
-    else cat(inputArg);
+    let input = process.argv.slice(-1)[0];
+    if(isUrl(input)) webCat(input, output);
+    else cat(input, output);
 }
 
 main();
